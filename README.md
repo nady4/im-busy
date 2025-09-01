@@ -1,16 +1,16 @@
 # 🟩 im-busy
 
 A **Node.js** script that fills your GitHub contributions graph with green squares.  
-It generates commits with randomly distributed dates over the past year to simulate continuous activity.  
+It generates commits with randomly distributed dates over the past year.  
 
 <br>
 
 ## 🚀 Features
 
-- Generates fake commits in your repository.  
-- Assigns random dates to each commit within the past year.  
-- Automatically updates the contributions graph on your GitHub profile.  
-- Lets you customize how many commits are generated.  
+- Generates fake commits in your repository.
+- Assigns random dates to each commit within the past year.
+- Automatically updates the contributions graph on your GitHub profile.
+- Lets you customize how many commits are generated.
 
 <br>
 
