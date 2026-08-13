@@ -1,7 +1,6 @@
 # 🟩 im-busy
 
-A **Node.js** script that fills your GitHub contributions graph with green squares.  
-It generates commits with randomly distributed dates with configurable commit count, weekends and working hours.
+Script that generates simulated GitHub contributions with configurable commit counts, date ranges, weekends, and working hours.
 
 <br>
 
