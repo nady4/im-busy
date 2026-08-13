@@ -1,39 +1,26 @@
-import jsonfile from "jsonfile";
-import moment from "moment";
-import simpleGit from "simple-git";
-import random from "random";
+import { parseFlags } from "./args.js";
+import { askNumber, askYesNo, askHours } from "./prompts.js";
+import { createDatePicker } from "./dates.js";
+import { generateCommits } from "./git.js";
 
-const FILE_PATH = "./data.json";
+const flags = parseFlags();
 
-const makeCommit = (n) => {
-  if (n === 0) return simpleGit().push(); // If n is 0, push the commits and exit the function
+let count = flags.count ?? null;
+let includeWeekends = flags["include-weekends"] ?? false;
+let hours = flags.hours ?? null;
+let intensity = flags.intensity ?? null;
 
-  const weeks = random.int(0, 54);
-  const days = random.int(0, 6);
+count = await askNumber("How many commits?", count ?? 100);
+includeWeekends = await askYesNo("Include weekends?", includeWeekends);
+hours = await askHours("Commit hours range?", hours ?? [9, 18]);
+intensity = await askNumber("Max commits per day?", intensity ?? 3);
 
-  const DATE = moment()
-    .subtract(1, "y")
-    .add(1, "d") // Get the current date, subtract one year, add one day
-    .add(weeks, "w")
-    .add(days, "d")
-    .format(); // then add the random weeks and days, and format the date
+const pickDate = createDatePicker({ includeWeekends, hours, intensity });
 
-  const data = {
-    date: DATE,
-  };
+console.log(
+  `\nCommits: ${count} | Weekends: ${includeWeekends ? "yes" : "no"} | Hours: ${hours.join("-")} | Max per day: ${intensity}`
+);
+const confirmed = await askYesNo("Start?", true);
 
-  console.log(DATE);
-
-  jsonfile.writeFile(FILE_PATH, data, () => {
-    // Write the date data to the JSON file
-    simpleGit()
-      .add([FILE_PATH]) // Stage the JSON file for commit
-      .commit(
-        DATE,
-        { "--date": DATE }, // Commit the change with the formatted date and set the commit date
-        makeCommit.bind(this, --n)
-      ); // Recursively call makeCommit with n-1
-  });
-};
-
-makeCommit(100);
+if (confirmed) generateCommits(count, pickDate);
+else console.log("Aborted.");
